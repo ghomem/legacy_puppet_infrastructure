@@ -6,20 +6,25 @@ class puppet_infrastructure::rsyslog_client (
   Optional[String] $failover      = undef,
   Optional[String]  $failover_ip = undef,
 ) {
+
   include puppet_infrastructure::rsyslog_base
 
   $certname = $trusted['certname']
 
   # guarantee the name is always resolvable
-  host { $target:
-    ip     => $target_ip,
-    target => '/etc/hosts',
+  if $target_ip {
+    host { $target:
+      ip     => $target_ip,
+      target => '/etc/hosts',
+    }
   }
 
   if $failover {
-    host { $failover:
-      ip     => $failover_ip,
-      target => '/etc/hosts',
+    if $failover_ip {
+      host { $failover:
+        ip     => $failover_ip,
+        target => '/etc/hosts',
+      }
     }
   }
 
